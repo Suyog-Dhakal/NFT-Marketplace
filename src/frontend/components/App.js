@@ -1,8 +1,47 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from "ethers";
 import logo from "./market.png";
+import Navigation from "./Navbar";
 import "./App.css";
+import { useState } from "react";
+import MarketplaceAddress from "../contractsData/Marketplace-address.json";
+import NFTAddress from "../contractsData/NFT-address.json";
+import MarketplaceAbi from "../contractsDataMarketplace.json";
+import NFTAbi from "../contractsDataNFT.json";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+  const [account, setAccount] = useState(null);
+  const [nft, setNFT] = useState({});
+  const [marketplace, setMarketplace] = useState({});
+
+  //metamask login and connect
+  const web3Handler = async () => {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+
+    setAccount(account[0]);
+    //get provider from metamask
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    //set signer
+    const signer = provider.getSigner();
+    loadContracts(signer);
+  };
+
+  const loadContracts = async (signer) => {
+    //get deployed copies of contracts
+    const marketplace = new ethers.Contract(
+      MarketplaceAddress.address,
+      MarketplaceAbi.abi,
+      signer
+    );
+    setMarketplace(marketplace);
+    const nft = new ethers.Contract(NFTAddress.address, NFTAbi.abi, signer);
+    setNFT(nft);
+    setLoading(false);
+  };
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -61,4 +100,4 @@ function App() {
 }
 
 export default App;
-//1.24
+//1.34
