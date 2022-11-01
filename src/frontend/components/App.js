@@ -8,6 +8,7 @@ import MarketplaceAddress from "../contractsData/Marketplace-address.json";
 import NFTAddress from "../contractsData/NFT-address.json";
 import MarketplaceAbi from "../contractsDataMarketplace.json";
 import NFTAbi from "../contractsDataNFT.json";
+import { Spinner } from "react-bootstrap";
 
 function App() {
   const [loading, setLoading] = useState(true);
